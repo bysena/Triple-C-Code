@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_LEN 1005
+
+int contarDiamantes(const char *s) {
+    char pilha[MAX_LEN];
+    int topo = -1;
+    int contador = 0;
+
+    for (int i = 0; s[i] != '\0'; i++) {
+        char c = s[i];
+
+        if (c == '.' || c == '<') {
+            pilha[++topo] = c;
+        }
+        else if (c == '>') {
+            int pontosRemovidos = 0;
+
+            while (topo >= 0 && pilha[topo] == '.') {
+                topo--;
+                pontosRemovidos++;
+            }
+
+            if (topo >= 0 && pilha[topo] == '<') {
+                
+                topo--;
+                contador++;
+            }
+            else {
+               
+                for (int k = 0; k < pontosRemovidos; k++) {
+                    pilha[++topo] = '.';
+                }
+                pilha[++topo] = '>';
+            }
+        }
+      
+    }
+
+    return contador;
+}
+
+int main(void) {
+    int n;
+    char linha[MAX_LEN];
+
+    if (scanf("%d", &n) != 1) {
+        return 0;
+    }
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF) { }
+
+    for (int i = 0; i < n; i++) {
+        if (fgets(linha, sizeof(linha), stdin) == NULL) {
+            linha[0] = '\0';
+        }
+
+        size_t len = strlen(linha);
+        while (len > 0 && (linha[len - 1] == '\n' || linha[len - 1] == '\r')) {
+            linha[--len] = '\0';
+        }
+
+        printf("%d\n", contarDiamantes(linha));
+    }
+
+    return 0;
+}
