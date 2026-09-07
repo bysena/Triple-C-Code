@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_NOME 51
+
+typedef struct {
+    char nome[MAX_NOME];
+    int habilidade;
+} Aluno;
+
+int compararHabilidadeDesc(const void *a, const void *b) {
+    const Aluno *aa = (const Aluno *)a;
+    const Aluno *bb = (const Aluno *)b;
+    return bb->habilidade - aa->habilidade;
+}
+
+int compararNomes(const void *a, const void *b) {
+    const char *na = *(const char *const *)a;
+    const char *nb = *(const char *const *)b;
+    return strcmp(na, nb);
+}
+
+int main(void) {
+    int n, t;
+
+    if (scanf("%d %d", &n, &t) != 2) {
+        return 0;
+    }
+
+    Aluno *alunos = (Aluno *)malloc((size_t)n * sizeof(Aluno));
+    if (alunos == NULL) {
+        return 0;
+    }
+
+    for (int i = 0; i < n; i++) {
+        scanf("%s %d", alunos[i].nome, &alunos[i].habilidade);
+    }
+
+    qsort(alunos, (size_t)n, sizeof(Aluno), compararHabilidadeDesc);
+
+    char **nomesTime = (char **)malloc((size_t)n * sizeof(char *));
+    if (nomesTime == NULL) {
+        free(alunos);
+        return 0;
+    }
+
+    for (int time = 0; time < t; time++) {
+        int qtd = 0;
+
+        for (int i = time; i < n; i += t) {
+            nomesTime[qtd++] = alunos[i].nome;
+        }
+
+        qsort(nomesTime, (size_t)qtd, sizeof(char *), compararNomes);
+
+        printf("Time %d\n", time + 1);
+        for (int k = 0; k < qtd; k++) {
+            printf("%s\n", nomesTime[k]);
+        }
+        printf("\n");
+    }
+
+    free(nomesTime);
+    free(alunos);
+    return 0;
+}
