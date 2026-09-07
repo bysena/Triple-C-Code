@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int nota;
+    int posicaoOriginal;
+} Aluno;
+
+int comparar(const void *a, const void *b) {
+    const Aluno *aa = (const Aluno *)a;
+    const Aluno *bb = (const Aluno *)b;
+    return bb->nota - aa->nota;
+}
+
+int main(void) {
+    int n;
+
+    if (scanf("%d", &n) != 1) {
+        return 0;
+    }
+
+    for (int t = 0; t < n; t++) {
+        int m;
+        if (scanf("%d", &m) != 1 || m <= 0) {
+            printf("0\n");
+            continue;
+        }
+
+        Aluno *alunos = (Aluno *)malloc((size_t)m * sizeof(Aluno));
+        if (alunos == NULL) {
+            return 0;
+        }
+
+        for (int i = 0; i < m; i++) {
+            int nota;
+            scanf("%d", &nota);
+            alunos[i].nota = nota;
+            alunos[i].posicaoOriginal = i;
+        }
+
+        qsort(alunos, (size_t)m, sizeof(Aluno), comparar);
+
+        int contador = 0;
+        for (int i = 0; i < m; i++) {
+            if (alunos[i].posicaoOriginal == i) {
+                contador++;
+            }
+        }
+
+        printf("%d\n", contador);
+
+        free(alunos);
+    }
+
+    return 0;
+}
